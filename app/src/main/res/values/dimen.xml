@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="login_input_width">200dp</dimen>
+    <dimen name="link_login_text_size">15sp</dimen>
+    <dimen name="title_login_text_size">20sp</dimen>
+</resources>
