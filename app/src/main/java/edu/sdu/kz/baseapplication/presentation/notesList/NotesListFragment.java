@@ -1,11 +1,17 @@
 package edu.sdu.kz.baseapplication.presentation.notesList;
 
+
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
@@ -27,14 +34,11 @@ import edu.sdu.kz.baseapplication.data.network.models.Note;
 import edu.sdu.kz.baseapplication.presentation.login.LoginActivity;
 import edu.sdu.kz.baseapplication.presentation.notesList.singleNote.NoteFragment;
 import edu.sdu.kz.baseapplication.utils.FragmentUtils;
-import edu.sdu.kz.baseapplication.utils.ToastUtils;
 
 public class NotesListFragment extends RefreshFragment implements NotesListView {
     @InjectPresenter
     NotesListPresenter notesListPresenter;
 
-    @BindView(R.id.fab)
-    FloatingActionButton floatingActionButton;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.refreshLayout)
@@ -61,18 +65,8 @@ public class NotesListFragment extends RefreshFragment implements NotesListView 
         setupToolbar();
         setSwipeRefreshLayout(swipeRefreshLayout);
         setAdapter();
+        setupFloatingAB();
 
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NoteFragment noteFragment=new NoteFragment();
-                Bundle bundle=new Bundle();
-                bundle.putSerializable(Note.class.getSimpleName(),new Note());
-                noteFragment.setArguments(bundle);
-                FragmentUtils.replace((AppCompatActivity) getActivity(),R.id.fragmentContainer,noteFragment);
-
-            }
-        });
         return view;
     }
 
@@ -87,8 +81,28 @@ public class NotesListFragment extends RefreshFragment implements NotesListView 
         adapter.init(getMvpDelegate(), getId());
     }
     private void setupToolbar(){
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(false);
+        Toolbar toolbar=getActivity().findViewById(R.id.toolbar);
+        AppBarLayout.LayoutParams params =
+                (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+        toolbar.setLayoutParams(params);
+
+        ActionBar actionBar=((AppCompatActivity)getActivity()).getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+    }
+    private void setupFloatingAB(){
+        FloatingActionButton floatingActionButton=getActivity().findViewById(R.id.fab);
+        floatingActionButton.show();
+        floatingActionButton.setOnClickListener(view -> {
+            NoteFragment noteFragment=new NoteFragment();
+            Bundle bundle=new Bundle();
+            bundle.putSerializable(Note.class.getSimpleName(),new Note());
+            noteFragment.setArguments(bundle);
+            FragmentUtils.replace((AppCompatActivity) getActivity(),R.id.fragmentContainer,noteFragment);
+
+        });
     }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

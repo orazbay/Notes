@@ -1,7 +1,12 @@
 package edu.sdu.kz.baseapplication.presentation.notesList.singleNote;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
 
@@ -52,6 +58,7 @@ public class NoteFragment extends BaseFragment implements NoteView {
         setupToolbar();
         setupEditText();
 
+
         return view;
     }
 
@@ -76,9 +83,21 @@ public class NoteFragment extends BaseFragment implements NoteView {
         editText.setVerticalScrollBarEnabled(true);
         editText.setMovementMethod(new ScrollingMovementMethod());
     }
+
     private void setupToolbar(){
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        params.setScrollFlags(0);
+
+        AppBarLayout appBarLayout = getActivity().findViewById(R.id.appBarLayout);
+        appBarLayout.setExpanded(true, true);
+
+        getActivity().findViewById(R.id.fab).setVisibility(View.GONE);
+
+
+        ActionBar actionBar=((AppCompatActivity)getActivity()).getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
     }
 
     @Override
@@ -96,6 +115,7 @@ public class NoteFragment extends BaseFragment implements NoteView {
         inflater.inflate(R.menu.menu_note,menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
+
 
 
     @Override
