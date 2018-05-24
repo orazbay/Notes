@@ -6,6 +6,6 @@ package edu.sdu.kz.baseapplication.utils;
 
 public class StringUtils {
     public static boolean isNotEmpty(String text){
-        return text!=null&&text.length()>0;
+        return text!=null&&text.trim().length()>0;
     }
 }

@@ -27,6 +27,7 @@
     <style name="noteText">
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@android:color/black</item>
         <item name="android:lineSpacingExtra">10dp</item>
     </style>
     <style name="SplashTheme" parent="AppTheme">

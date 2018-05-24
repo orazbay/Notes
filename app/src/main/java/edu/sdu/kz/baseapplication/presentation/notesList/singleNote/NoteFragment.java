@@ -1,6 +1,7 @@
 package edu.sdu.kz.baseapplication.presentation.notesList.singleNote;
 
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,10 +49,12 @@ public class NoteFragment extends BaseFragment implements NoteView {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // TODO: inflate a fragment view
         super.onCreateView(inflater, container, savedInstanceState);
+        setupToolbar();
         setupEditText();
 
         return view;
     }
+
 
     @Override
     public void onStart() {
@@ -73,10 +76,19 @@ public class NoteFragment extends BaseFragment implements NoteView {
         editText.setVerticalScrollBarEnabled(true);
         editText.setMovementMethod(new ScrollingMovementMethod());
     }
+    private void setupToolbar(){
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
 
     @Override
     public void setContentText(String text) {
         editText.setText(text);
+    }
+
+    @Override
+    public void closeFragment() {
+        getActivity().onBackPressed();
     }
 
     @Override
@@ -85,11 +97,18 @@ public class NoteFragment extends BaseFragment implements NoteView {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
+            case android.R.id.home:
+                closeFragment();
+                break;
             case R.id.item_save:
                 presenter.save(editText.getText().toString());
+                break;
+            case R.id.item_delete:
+                presenter.deleteNote();
                 break;
         }
         return super.onOptionsItemSelected(item);

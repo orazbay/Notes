@@ -58,6 +58,7 @@ public class NotesListFragment extends RefreshFragment implements NotesListView 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // TODO: inflate a fragment view
         super.onCreateView(inflater, container, savedInstanceState);
+        setupToolbar();
         setSwipeRefreshLayout(swipeRefreshLayout);
         setAdapter();
 
@@ -77,7 +78,6 @@ public class NotesListFragment extends RefreshFragment implements NotesListView 
 
     @Override
     public void onRefresh() {
-        ToastUtils.showToast(getContext(),"onRefresh");
         notesListPresenter.getNotes();
     }
     private void setAdapter() {
@@ -85,6 +85,10 @@ public class NotesListFragment extends RefreshFragment implements NotesListView 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter.init(getMvpDelegate(), getId());
+    }
+    private void setupToolbar(){
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(false);
     }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

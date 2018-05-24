@@ -3,9 +3,11 @@ package edu.sdu.kz.baseapplication.data.network;
 
 import java.util.ArrayList;
 
+import edu.sdu.kz.baseapplication.data.network.models.DeleteNoteResponse;
 import edu.sdu.kz.baseapplication.data.network.models.Note;
 import io.reactivex.Single;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
@@ -35,4 +37,13 @@ public interface NotesService {
             @Body Note note,
             @Path("objectId") String objectId
     );
+    @DELETE("data/note/{objectId}")
+    Single<DeleteNoteResponse> deleteNote(
+            @Header("user-token") String user_token,
+            @Path("objectId") String objectId
+    );
+
+
+
+
 }

@@ -4,12 +4,18 @@ package edu.sdu.kz.baseapplication.presentation.notesList;
 import com.arellomobile.mvp.InjectViewState;
 
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+
 import edu.sdu.kz.baseapplication.data.network.NotesService;
 import edu.sdu.kz.baseapplication.data.network.RetrofitHelper;
 
 
+import edu.sdu.kz.baseapplication.data.network.models.Note;
 import edu.sdu.kz.baseapplication.data.prefs.PreferencesHelper;
 import edu.sdu.kz.baseapplication.presentation.base.BasePresenter;
+import edu.sdu.kz.baseapplication.presentation.notesList.singleNote.NoteDeletePresenter;
 import edu.sdu.kz.baseapplication.utils.RxUtils;
 import edu.sdu.kz.baseapplication.utils.WhereQueryGenerator;
 
@@ -19,7 +25,7 @@ import edu.sdu.kz.baseapplication.utils.WhereQueryGenerator;
  */
 
 @InjectViewState
-public class NotesListPresenter extends BasePresenter<NotesListView> {
+public class NotesListPresenter extends NoteDeletePresenter<NotesListView> {
     public NotesListPresenter() {
     }
 
@@ -35,16 +41,23 @@ public class NotesListPresenter extends BasePresenter<NotesListView> {
                 .compose(RxUtils.applySchedulers())
                 .subscribe(
                         response -> {
+                            Comparator<Note> noteComparator= (note, t1) -> note.geDate().compareTo(t1.geDate());
+
+                            Collections.sort(response,noteComparator);
+                            Collections.reverse(response);
                             getViewState().setDataToAdapter(response);
                         },
                         this::handleBasicErrors
                 );
-//        getViewState().setDataToAdapter(new ArrayList<Note>(Arrays.asList(
-//                new Note("today is a good day eveything is fine but fdsfds today is a good day eveything is fine but fdsfds today is a good day eveything is fine but fdsfds today is a good day eveything is fine but fdsfds today is a good day eveything is fine but fdsfds today is a good day eveything is fine but fdsfds today is a good day eveything is fine but fdsfds today is a good day eveything is fine but fdsfds"),
-//                new Note("today is a good day eveything is fine but fdsfds"),
-//                new Note("today is a good day eveything is fine but fdsfds"),
-//                new Note("today is a good day eveything is fine but fdsfds")
-//                ))
-//        );
     }
+    public void deleteNote(String object){
+        deleteNote(
+                object,
+                deleteNoteResponse -> {
+                    getNotes();
+
+                });
+
+    }
+
 }

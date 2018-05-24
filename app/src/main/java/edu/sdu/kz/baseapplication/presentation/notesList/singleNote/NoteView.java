@@ -5,5 +5,6 @@ import edu.sdu.kz.baseapplication.presentation.base.fragment.BaseFragmentView;
 
 public interface NoteView extends BaseFragmentView{
     public void setContentText(String text);
+    public void closeFragment();
 
 }

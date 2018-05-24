@@ -6,12 +6,16 @@ import android.support.transition.ChangeBounds;
 import android.support.transition.ChangeImageTransform;
 import android.support.transition.Fade;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.util.DiffUtil;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 
 import edu.sdu.kz.baseapplication.R;
 import edu.sdu.kz.baseapplication.data.network.models.Note;
@@ -60,13 +64,17 @@ public class NotesListAdapter extends BaseRvAdapter<NotesListItemViewHolder> imp
 
     @Override
     public void setData(ArrayList<Note> items) {
+        ArrayList<Note> oldNotes=this.items;
         this.items=items;
-        notifyDataSetChanged();
+        NotesDiffCallback notesDiffCallback=new NotesDiffCallback(oldNotes,items);
+        DiffUtil.DiffResult diffResult=DiffUtil.calculateDiff(notesDiffCallback,true);
+        diffResult.dispatchUpdatesTo(this);
+
 
     }
 
     @Override
-    public void onClicked(NoteFragment noteFragment,View view,String noteId) {
+    public void onOpenClicked(NoteFragment noteFragment, View view, String noteId) {
         noteFragment.setSharedElementEnterTransition(new AutoTransition());
         noteFragment.setSharedElementReturnTransition(new AutoTransition());
         notesListFragment.getActivity().getSupportFragmentManager()
@@ -75,5 +83,10 @@ public class NotesListAdapter extends BaseRvAdapter<NotesListItemViewHolder> imp
                 .replace(R.id.fragmentContainer, noteFragment)
                 .addToBackStack(NoteFragment.class.getName())
                 .commit();
+    }
+
+    @Override
+    public void onDeleteClicked(String noteId) {
+        notesListFragment.notesListPresenter.deleteNote(noteId);
     }
 }
