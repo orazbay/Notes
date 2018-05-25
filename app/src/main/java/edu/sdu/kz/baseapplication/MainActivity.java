@@ -10,24 +10,39 @@ import edu.sdu.kz.baseapplication.utils.FragmentUtils;
 
 public class MainActivity extends ActivityWithFragmentContainer {
 
+    public interface OnBackPressedFragment{
+        public void onBack();
+    }
+
+    private OnBackPressedFragment onBackPressedFragment;
+
+    public void setOnBackPressedFragment(OnBackPressedFragment onBackPressedFragment) {
+        this.onBackPressedFragment = onBackPressedFragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         FragmentUtils.replace(this, R.id.fragmentContainer,new NotesListFragment());
 
         setSupportActionBar(findViewById(R.id.toolbar));
 
     }
+
+
     @Override
     public void onBackPressed() {
-        int count = getSupportFragmentManager().getBackStackEntryCount();
-        Log.e("onBackPressed: ", "count " + count);
-        if (count == 1) {
-            finish();
+        if (onBackPressedFragment==null) {
+            int count = getSupportFragmentManager().getBackStackEntryCount();
+            if (count == 1) {
+                finish();
 
+            } else {
+                super.onBackPressed();
+            }
         }else {
-            super.onBackPressed();
+            onBackPressedFragment.onBack();
         }
 
     }

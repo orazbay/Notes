@@ -15,25 +15,27 @@ import butterknife.ButterKnife;
 import edu.sdu.kz.baseapplication.utils.ToastUtils;
 
 
-public class BaseFragment extends MvpAppCompatFragment implements BaseFragmentView  {
+public class BaseFragment extends MvpAppCompatFragment implements BaseFragmentView {
     private int viewId;
     protected View view;
 
     protected AlertDialog progressDialog;
 
 
-    public void setViewId(int viewId){
-        this.viewId=viewId;
+    public void setViewId(int viewId) {
+        this.viewId = viewId;
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        progressDialog=new AlertDialog.Builder(getContext(),android.R.style.Theme_Material_Dialog_NoActionBar).setCancelable(false).setView(new ProgressBar(getContext())).create();
-        if (viewId==0){
+        progressDialog = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Light_Dialog_NoActionBar
+        ).setCancelable(false).setView(new ProgressBar(getContext())).create();
+        if (viewId == 0) {
             return new View(getContext());
         }
-        view=inflater.inflate(viewId,container,false);
-        ButterKnife.bind(this,view);
+        view = inflater.inflate(viewId, container, false);
+        ButterKnife.bind(this, view);
         return view;
     }
 
@@ -49,22 +51,37 @@ public class BaseFragment extends MvpAppCompatFragment implements BaseFragmentVi
 
     @Override
     public void showToast(String message) {
-        ToastUtils.showToast(getContext(),message);
+        ToastUtils.showToast(getContext(), message);
     }
 
     @Override
     public void showMessage(String message) {
-        { new AlertDialog.Builder(getContext())
+        {
+            new AlertDialog.Builder(getContext())
                     .setMessage(message)
-                    .setPositiveButton(android.R.string.ok,(d,i)->{d.cancel();})
+                    .setPositiveButton(android.R.string.ok, (d, i) -> {
+                        d.cancel();
+                    })
                     .create().show();
         }
     }
 
     @Override
+    public void showCloseError(String message) {
+        new AlertDialog.Builder(getContext())
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Close application", (d, i) -> {
+                    d.cancel();
+                    getActivity().finish();
+                })
+                .create().show();
+    }
+
+    @Override
     public void goToActivity(Class<?> activityClass, boolean finishCurrentActivity) {
-        getActivity().startActivity(new Intent(getActivity(),activityClass));
-        if (finishCurrentActivity){
+        getActivity().startActivity(new Intent(getActivity(), activityClass));
+        if (finishCurrentActivity) {
             getActivity().finish();
         }
     }

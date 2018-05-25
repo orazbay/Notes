@@ -114,8 +114,7 @@ public class NotesListFragment extends RefreshFragment implements NotesListView 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.item_log_out:
-                PreferencesHelper.INSTANCE.removeToken();
-                goToActivity(LoginActivity.class,true);
+                notesListPresenter.logout();
                 break;
         }
         return super.onOptionsItemSelected(item);

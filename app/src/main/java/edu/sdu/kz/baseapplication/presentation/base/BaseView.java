@@ -9,6 +9,7 @@ import com.arellomobile.mvp.MvpView;
 
 public interface BaseView extends MvpView {
     public  void showMessage(String message);
+    public void showCloseError(String message);
     public  void goToActivity(Class<?> activityClass, boolean finishCurrentActivity);
 
 }

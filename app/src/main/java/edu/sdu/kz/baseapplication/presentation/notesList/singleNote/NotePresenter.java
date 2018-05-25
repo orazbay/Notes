@@ -31,7 +31,7 @@ public class NotePresenter extends NoteDeletePresenter<NoteView> {
         }
     }
 
-    public void save(String content) {
+    public void save(String content,boolean fromDialog) {
         if (note.content == null) {
             if (StringUtils.isNotEmpty(content)) {
                 RetrofitHelper.getService(NotesService.class)
@@ -41,6 +41,10 @@ public class NotePresenter extends NoteDeletePresenter<NoteView> {
                                 response -> {
                                     getViewState().showToast("Successfully created!");
                                     this.note = response;
+                                    if (fromDialog){
+                                        getViewState().hideProgress();
+                                        getViewState().closeFragment();
+                                    }
                                 },
                                 this::handleBasicErrors
                         );
@@ -58,6 +62,10 @@ public class NotePresenter extends NoteDeletePresenter<NoteView> {
                                 response -> {
                                     getViewState().showToast("Successfully updated!");
                                     this.note = response;
+                                    if (fromDialog){
+                                        getViewState().hideProgress();
+                                        getViewState().closeFragment();
+                                    }
                                 },
                                 this::handleBasicErrors
                         );
@@ -83,5 +91,9 @@ public class NotePresenter extends NoteDeletePresenter<NoteView> {
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    public boolean hasChanges(String content){
+        return StringUtils.isNotEmpty(content)&&!content.equals(note.content);
     }
 }

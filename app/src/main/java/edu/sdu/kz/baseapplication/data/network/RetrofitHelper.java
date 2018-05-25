@@ -1,7 +1,12 @@
 package edu.sdu.kz.baseapplication.data.network;
 
+import android.content.Context;
 import android.util.Log;
 
+import java.io.IOException;
+
+import edu.sdu.kz.baseapplication.utils.NetworkUtils;
+import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -42,6 +47,7 @@ public class RetrofitHelper {
     private static OkHttpClient createOkHttpClient() {
         final OkHttpClient.Builder httpClient =
                 new OkHttpClient.Builder();
+        httpClient.addInterceptor(new ConnectivityInterceptor());
         httpClient.addInterceptor(chain -> {
             final Request original = chain.request();
 
@@ -80,6 +86,9 @@ public class RetrofitHelper {
     public static<T> T getService(Class<T> serviceClass){
         return getRetrofit().create(serviceClass);
     }
+
+
+
 
 
 

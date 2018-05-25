@@ -18,7 +18,6 @@ import edu.sdu.kz.baseapplication.presentation.base.fragment.BaseFragment;
 import static edu.sdu.kz.baseapplication.utils.StringUtils.isNotEmpty;
 
 
-
 public class SignUpFragment extends BaseFragment implements LoginView {
 
 
@@ -65,7 +64,7 @@ public class SignUpFragment extends BaseFragment implements LoginView {
                 });
 
         linkSignIn.setOnClickListener(
-                v->{
+                v -> {
                     changePage();
                 }
         );
@@ -77,10 +76,16 @@ public class SignUpFragment extends BaseFragment implements LoginView {
     }
 
     private boolean isAllInputsFilled() {
-        return isNotEmpty(nameEdittext.getText().toString()) &&
+        if(isNotEmpty(nameEdittext.getText().toString()) &&
                 isNotEmpty(emailEdittext.getText().toString()) &&
                 isNotEmpty(passwordEdittext.getText().toString()) &&
-                isNotEmpty(passwordEdittext1.getText().toString());
+                isNotEmpty(passwordEdittext1.getText().toString())){
+            return true;
+
+        }else {
+            showErrorEmpty();
+            return false;
+        }
 
     }
 
@@ -88,13 +93,40 @@ public class SignUpFragment extends BaseFragment implements LoginView {
         if (isNotEmpty(passwordEdittext.getText().toString()) && isNotEmpty(passwordEdittext1.getText().toString())) {
             if (passwordEdittext.getText().toString().equals(passwordEdittext1.getText().toString())) {
                 return true;
+            } else {
+                showPasswordsNotSameError();
+                return false;
             }
         }
         return false;
     }
 
+    public void showErrorEmpty() {
+        String error = "emtpy";
+        if (!isNotEmpty(emailEdittext.getText().toString())) {
+            emailEdittext.setError(error);
+        }
+        if (!isNotEmpty(passwordEdittext.getText().toString())) {
+            passwordEdittext.setError(error);
+        }
+        if (!isNotEmpty(passwordEdittext1.getText().toString())) {
+            passwordEdittext1.setError(error);
+        }
+        if (!isNotEmpty(nameEdittext.getText().toString())) {
+            nameEdittext.setError(error);
+        }
+
+    }
+
+    public void showPasswordsNotSameError() {
+        String error = "not same";
+        passwordEdittext.setError(error);
+        passwordEdittext1.setError(error);
+
+    }
+
     @Override
     public void changePage() {
-        ((LoginActivity)getActivity()).changePage(0);
+        ((LoginActivity) getActivity()).changePage(0);
     }
 }
